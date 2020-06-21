@@ -1,6 +1,6 @@
 ---
-name: Sifan Liu
-# surname: Liu
+name: 刘思凡
+surname: Sifan Liu
 # position: "Professor"
 # address: "School of Physics & Chemistry, École Normale Supérieure"
 phone: +1 202 790 3421
@@ -10,10 +10,13 @@ twitter: Sifan_Liu
 github: fansi_sifan
 date: "`r format(Sys.time(), '%B %Y')`"
 # geometry: "left=1.5cm,right=1.5cm,top=1cm,bottom=1.5cm"
-
 output: vitae::awesomecv
 headcolor: 414141
-
+docname: résumé
+profilepic: "photo 2020.jpg"
+#中文 zh, 英文 en
+params:
+  lang: en
 ---
 
 ```{r setup, include=FALSE}
@@ -26,50 +29,62 @@ data_location = "https://docs.google.com/spreadsheets/d/1z8us4_kADFyEZNinN_Ci_yr
 googlesheets4::gs4_deauth()
 cv_data <- googlesheets4::read_sheet(data_location, sheet = "entries", skip = 1, col_types = "c") 
 ```
-
+ 
+<!-- # 教育背景 -->
 # Education
-
- * I poisoned myself doing research.
- * I was the first woman to win a Nobel prize
- * I was the first person and only woman to win a Nobel prize in two different sciences.
-
-# Education
-
 ```{r}
 cv_data %>% 
-  filter(language == "zh") %>%
+  filter(language == params$lang) %>%
   filter(section == "education") %>% 
-  mutate(dates = paste0(start," — ", end)) %>% 
+  mutate(dates = paste0(start," - ", end)) %>% 
+  detailed_entries(title, dates, institution, loc)
+```
+
+<!-- # 工作经历 -->
+# Experience
+```{r}
+cv_data %>% 
+  filter(language == params$lang) %>%
+  filter(section == "positions") %>% 
+  mutate(dates = paste0(start," - ", end)) %>% 
   detailed_entries(title, dates, institution, loc, description)
 ```
 
 
-```{r}
-tibble::tribble(
-  ~Year, ~Type, ~Desc,
-  1903, "Physics", "Awarded for her work on radioactivity with Pierre Curie and Henri Becquerel",
-  1911, "Chemistry", "Awarded for the discovery of radium and polonium"
-) %>% 
-  brief_entries(
-    glue::glue("Nobel Prize in {Type}"),
-    Year, 
-    Desc
-  )
-```
-
 # Publications
+<!-- # 研究成果 -->
 
 ```{r}
-library(dplyr)
-# tmp <- scholar::get_publications("SOfZqRsAAAAJ&") %>% 
-#   filter(cites > 30) %>% 
+# library(dplyr)
+# tmp <- scholar::get_publications("SOfZqRsAAAAJ&") %>%
+#   filter(grepl("economic|digitalization", title, ignore.case = T)) %>%
+#   filter(!grepl("evidence", title, ignore.case = T)) %>% 
 #   distinct(title, .keep_all = TRUE) %>%
-#   transmute(bibtype = "Article", author = as.character(author),
-#             title = as.character(title),
-#             journaltitle = as.character(journal), year, key = row_number()) 
+#   transmute(bibtype = "Article", 
+#             author = stringr::str_to_title(as.character(author)),
+#             title = stringr::str_to_title(as.character(title)),
+#             journaltitle = "Brookings Institution", year, key = row_number())
 # 
 # RefManageR::WriteBib(RefManageR::as.BibEntry(tmp), "Sliu.bib")
-# 
-bibliography_entries("Sliu.bib")
+
+# bibliography_entries("Sliu.bib") 
+
+cv_data %>%
+  filter(language == params$lang) %>%
+  filter(section == "publications") %>%
+  # mutate(dates = paste0(start," - ", end)) %>%
+  detailed_entries(why = description)
+
+```
+
+# Skills
+```{r}
+dplyr::tribble(
+  ~skill,
+  "Language: Mandarin, English, Spanish, French",
+  "Programming: R, Python",
+  "Certification: Udacity Machine Learning Nanodegree"
+) %>% 
+  detailed_entries(why = skill)
 ```
 
