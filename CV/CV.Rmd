@@ -9,6 +9,8 @@ email: "sifan1121@gmail.com"
 twitter: Sifan_Liu
 github: fansi_sifan
 date: "`r format(Sys.time(), '%B %Y')`"
+# aboutme: Four years' experience in regional economic development policy. I use data to help local policy makers better understand their cities
+aboutme: 四年美国智库工作经验，主要研究方向涉及数字经济时代，中小企业、新兴企业对城市经济发展的影响，以及相关的评价指标和政策支持。熟练运用 R, Python 等工具进行数据分析和数据可视化。
 # geometry: "left=1.5cm,right=1.5cm,top=1cm,bottom=1.5cm"
 output: vitae::awesomecv
 headcolor: 414141
@@ -16,7 +18,7 @@ docname: résumé
 profilepic: "photo 2020.jpg"
 #中文 zh, 英文 en
 params:
-  lang: en
+  lang: zh
 ---
 
 ```{r setup, include=FALSE}
@@ -27,11 +29,16 @@ library(magrittr) # For the pipe
 data_location = "https://docs.google.com/spreadsheets/d/1z8us4_kADFyEZNinN_Ci_yrcyJwhcmXIRJPMXqcsBLo"  
 
 googlesheets4::gs4_deauth()
-cv_data <- googlesheets4::read_sheet(data_location, sheet = "entries", skip = 1, col_types = "c") 
+cv_data <- googlesheets4::read_sheet(data_location, sheet = "entries", skip = 1, col_types = "c") %>% 
+  mutate(in_resume = as.logical(in_resume)) %>% 
+  filter(in_resume)
 ```
  
-<!-- # 教育背景 -->
-# Education
+
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Education", "教育背景"), "\n")
+```
+
 ```{r}
 cv_data %>% 
   filter(language == params$lang) %>%
@@ -40,8 +47,10 @@ cv_data %>%
   detailed_entries(title, dates, institution, loc)
 ```
 
-<!-- # 工作经历 -->
-# Experience
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Experience", "工作经历"), "\n")
+```
+
 ```{r}
 cv_data %>% 
   filter(language == params$lang) %>%
@@ -51,8 +60,9 @@ cv_data %>%
 ```
 
 
-# Publications
-<!-- # 研究成果 -->
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Publications", "学术成果"), "\n")
+```
 
 ```{r}
 # library(dplyr)
@@ -70,21 +80,22 @@ cv_data %>%
 # bibliography_entries("Sliu.bib") 
 
 cv_data %>%
-  filter(language == params$lang) %>%
+  filter(grepl(params$lang, language)) %>%
   filter(section == "publications") %>%
   # mutate(dates = paste0(start," - ", end)) %>%
-  detailed_entries(why = description)
+  brief_entries(what = description, when = start)
 
 ```
 
-# Skills
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Skills", "专业技能"), "\n")
+```
+
 ```{r}
-dplyr::tribble(
-  ~skill,
-  "Language: Mandarin, English, Spanish, French",
-  "Programming: R, Python",
-  "Certification: Udacity Machine Learning Nanodegree"
-) %>% 
-  detailed_entries(why = skill)
+cv_data %>% 
+  filter(language == params$lang) %>%
+  filter(section == "skills") %>%
+  # mutate(dates = paste0(start," - ", end)) %>%
+  brief_entries(what = description, when = start)
 ```
 
