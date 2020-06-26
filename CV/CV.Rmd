@@ -7,18 +7,19 @@ phone: +1 202 790 3421
 www: sifanliu.com
 email: "sifan1121@gmail.com"
 twitter: Sifan_Liu
-github: fansi_sifan
+github: fansi-sifan
 date: "`r format(Sys.time(), '%B %Y')`"
 # aboutme: Four years' experience in regional economic development policy. I use data to help local policy makers better understand their cities
-aboutme: 四年美国智库工作经验，主要研究方向涉及数字经济时代，中小企业、新兴企业对城市经济发展的影响，以及相关的评价指标和政策支持。熟练运用 R, Python 等工具进行数据分析和数据可视化。
+# aboutme: 四年美国智库工作经验，主要研究方向涉及数字经济时代，中小企业、新兴企业对城市经济发展的影响，以及相关的评价指标和政策支持。熟练运用 R, Python 等工具进行数据分析和数据可视化。
+aboutme: Four years' research experience with 30+ publications on digitalization, startup ecosystems, small businesses, and urban economic development. Provided consultation for five regional economic development organizations on industry strategies. Experienced analyst adept at collecting, analyzing, and interpreting large datasets, developing predictive models, and performing data management tasks. 
 # geometry: "left=1.5cm,right=1.5cm,top=1cm,bottom=1.5cm"
 output: vitae::awesomecv
-headcolor: 414141
+headcolor: 000000
 docname: résumé
-profilepic: "photo 2020.jpg"
+# profilepic: "photo 2020.jpg"
 #中文 zh, 英文 en
 params:
-  lang: zh
+  lang: en
 ---
 
 ```{r setup, include=FALSE}
@@ -30,8 +31,9 @@ data_location = "https://docs.google.com/spreadsheets/d/1z8us4_kADFyEZNinN_Ci_yr
 
 googlesheets4::gs4_deauth()
 cv_data <- googlesheets4::read_sheet(data_location, sheet = "entries", skip = 1, col_types = "c") %>% 
-  mutate(in_resume = as.logical(in_resume)) %>% 
-  filter(in_resume)
+  # mutate(in_resume = as.logical(in_resume)) %>% 
+  filter(in_resume!=0) %>% 
+  arrange(in_resume)
 ```
  
 
@@ -44,7 +46,7 @@ cv_data %>%
   filter(language == params$lang) %>%
   filter(section == "education") %>% 
   mutate(dates = paste0(start," - ", end)) %>% 
-  detailed_entries(title, dates, institution, loc)
+  detailed_entries(title, dates, institution, loc, description)
 ```
 
 ```{r, results='asis'}
@@ -61,7 +63,7 @@ cv_data %>%
 
 
 ```{r, results='asis'}
-cat("#",ifelse(params$lang == "en", "Publications", "学术成果"), "\n")
+# cat("#",ifelse(params$lang == "en", "Publications", "学术成果"), "\n")
 ```
 
 ```{r}
@@ -79,11 +81,11 @@ cat("#",ifelse(params$lang == "en", "Publications", "学术成果"), "\n")
 
 # bibliography_entries("Sliu.bib") 
 
-cv_data %>%
-  filter(grepl(params$lang, language)) %>%
-  filter(section == "publications") %>%
-  # mutate(dates = paste0(start," - ", end)) %>%
-  brief_entries(what = description, when = start)
+# cv_data %>%
+#   filter(grepl(params$lang, language)) %>%
+#   filter(section == "publications") %>%
+#   # mutate(dates = paste0(start," - ", end)) %>%
+#   brief_entries(what = description, when = start)
 
 ```
 
