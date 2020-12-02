@@ -3,22 +3,26 @@ name: 刘思凡
 surname: Sifan Liu
 # position: ""
 # address: ""
-phone: +1 202 790 3421
+# phone: +1 202 790 3421
+phone: 180 0169 8145
 www: sifanliu.com
 email: "sifan1121@gmail.com"
 twitter: Sifan_Liu
 github: fansi-sifan
 date: "`r format(Sys.time(), '%B %Y')`"
-aboutme: 十月可回国入职。美国顶尖智库区域经济研究及数据分析经验，发表英文研究报告和综述30余篇，主要研究方向涉及数字经济时代产业动态和政策支持。熟练运用 R, Python 等工具进行数据分析、数据建模、和数据可视化。
-# aboutme: Four years' research experience with 30+ publications on digitalization, startup ecosystems, small businesses, and urban economic development. Provided consultation for five regional economic development organizations on industry strategies. Experienced analyst adept at collecting, analyzing, and interpreting large datasets, developing predictive models, and performing data management tasks. 
-# geometry: "left=1.5cm,right=1.5cm,top=1cm,bottom=1.5cm"
+# aboutme: 美国顶尖智库区域经济研究及数据分析经验，发表英文研究报告和综述30余篇，主要研究方向涉及数字经济时代产业动态和政策支持。熟练运用 R, Python 等工具进行数据分析、数据建模、和数据可视化。
+aboutme: Experienced economic researcher at a leading think tank, with 30+ publications on sustainable infrastructure, economic impact of technology, startup ecosystems, and access to capital. Provided consultation for five regional economic development organizations on sectoral strategies. 
+# Experienced analyst adept at collecting, analyzing, and interpreting large datasets, developing predictive models, and performing data management tasks.
+geometry: "left=1.5cm,right=1.5cm,top=1cm,bottom=1.5cm"
 output: vitae::awesomecv
 headcolor: 333333
 docname: résumé
 # profilepic: "photo 2020.jpg"
 #中文 zh, 英文 en
 params:
-  lang: zh
+  lang: en
+  col: aiib
+  # col:tech
 ---
 
 ```{r setup, include=FALSE}
@@ -29,10 +33,17 @@ library(magrittr) # For the pipe
 data_location = "https://docs.google.com/spreadsheets/d/1z8us4_kADFyEZNinN_Ci_yrcyJwhcmXIRJPMXqcsBLo"  
 
 googlesheets4::gs4_deauth()
-cv_data <- googlesheets4::read_sheet(data_location, sheet = "entries", skip = 1, col_types = "c") %>% 
+
+get_data <- function(in_resume){
+  in_resume <- sym(in_resume)
+  
+  googlesheets4::read_sheet(data_location, sheet = "entries", skip = 1, col_types = "c") %>% 
   # mutate(in_resume = as.logical(in_resume)) %>% 
-  filter(in_resume!=0) %>% 
-  arrange(in_resume)
+  filter(!!in_resume!= "0") %>% 
+  arrange(!!in_resume)
+}
+
+cv_data <- get_data(params$col)
 ```
  
 ```{r, results='asis'}
@@ -62,7 +73,7 @@ cv_data %>%
 
 
 ```{r, results='asis'}
-cat("#",ifelse(params$lang == "en", "Publications", "学术成果"), "\n")
+cat("#",ifelse(params$lang == "en", "Selected Publications", "学术成果"), "\n")
 ```
 
 ```{r}
@@ -83,6 +94,7 @@ cat("#",ifelse(params$lang == "en", "Publications", "学术成果"), "\n")
 cv_data %>%
   filter(grepl(params$lang, language)) %>%
   filter(section == "publications") %>%
+  arrange(start) %>% 
   # mutate(dates = paste0(start," - ", end)) %>%
   brief_entries(what = description, when = start)
 
