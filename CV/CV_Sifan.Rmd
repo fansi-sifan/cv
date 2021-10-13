@@ -1,0 +1,113 @@
+---
+name: 刘思凡
+surname: Sifan Liu
+# phone: +1 202 790 3421
+phone: +86 180 0169 8145
+www: sifanliu.com
+email: "sifan1121@gmail.com"
+twitter: Sifan_Liu
+github: fansi-sifan
+date: "`r format(Sys.time(), '%B %Y')`"
+aboutme: Senior research analyst with strong quantatitive and qualitative research skills in a leading think tank in the U.S., with experiences on climate finance, innovative financial instruments, and sustainable cities.
+
+
+output: vitae::awesomecv
+headcolor: 333333
+docname: résumé
+#中文 zh, 英文 en
+params:
+  lang: en
+  col: wri
+  # col:tech
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(vitae)
+library(magrittr) # For the pipe
+
+data_location = "https://docs.google.com/spreadsheets/d/1z8us4_kADFyEZNinN_Ci_yrcyJwhcmXIRJPMXqcsBLo"
+
+googlesheets4::gs4_deauth()
+
+get_data <- function(in_resume){
+  in_resume <- sym(in_resume)
+  
+  googlesheets4::read_sheet(data_location, sheet = "entries", skip = 1, col_types = "c") %>% 
+  # mutate(in_resume = as.logical(in_resume)) %>% 
+  filter(!!in_resume!= "0") %>% 
+  arrange(!!in_resume)
+}
+
+cv_data <- get_data(params$col)
+```
+ 
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Experience", "工作经历"), "\n")
+```
+
+```{r}
+cv_data %>% 
+  filter(language == params$lang) %>%
+  filter(section == "positions") %>% 
+  arrange(desc(end)) %>% 
+  mutate(dates = paste0(start," - ", end)) %>% 
+  detailed_entries(title, dates, institution, loc, description) 
+```
+
+
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Education", "教育背景"), "\n")
+```
+
+```{r}
+cv_data %>% 
+  filter(language == params$lang) %>%
+  filter(section == "education") %>% 
+  mutate(dates = paste0(start," - ", end)) %>% 
+  detailed_entries(title, dates, institution, loc, description)
+```
+
+
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Selected Publications", "学术成果"), "\n")
+# cat("#",ifelse(params$lang == "en", "Selected Publications", "学术成果"), "\n")
+```
+
+```{r}
+# library(dplyr)
+# tmp <- scholar::get_publications("SOfZqRsAAAAJ&") %>%
+#   filter(grepl("economic|digitalization", title, ignore.case = T)) %>%
+#   filter(!grepl("evidence", title, ignore.case = T)) %>% 
+#   distinct(title, .keep_all = TRUE) %>%
+#   transmute(bibtype = "Article", 
+#             author = stringr::str_to_title(as.character(author)),
+#             title = stringr::str_to_title(as.character(title)),
+#             journaltitle = "Brookings Institution", year, key = row_number())
+# 
+# RefManageR::WriteBib(RefManageR::as.BibEntry(tmp), "Sliu.bib")
+
+# bibliography_entries("Sliu.bib") 
+
+cv_data %>%
+  filter(grepl(params$lang, language)) %>%
+  filter(section %in% c("publications", "presentations")) %>%
+  arrange(desc(start)) %>% 
+  # mutate(dates = paste0(start," - ", end)) %>%
+  brief_entries(what = description, when = start)
+
+```
+
+
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Skills", "专业技能"), "\n")
+```
+
+```{r}
+cv_data %>% 
+  filter(language == params$lang) %>%
+  filter(section == "skills") %>%
+  # mutate(dates = paste0(start," - ", end)) %>%
+  brief_entries(what = description, when = start)
+```
+
