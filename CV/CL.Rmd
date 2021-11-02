@@ -17,23 +17,7 @@ docname: cover letter
 ---
 
 ```{r, results='asis', echo=FALSE}
-cat("#", "Finance Research Analyst", "\n")
+cat("#", "XXXXX", "\n")
 cat("\n")
 ```
 
-
-
-
-Dear hiring manager,
-
-As a former intern at WRI Ross Center for Sustainable cities , I had the great honor to observe WRI's approach firsthand, build friendship with my wonderful colleagues, and enjoy the extremely inclusive workplace. I am very excited about this opportunity to join WRI's China office as a research analyst.
-
-My research experience at Brookings Institution has equipped me well for conducting high quality research, authoring knowledge products, and delivering presentations at internal and external meetings. I have led multiple market assessment projects to design and create regional economic indicators for U.S. cities, and developed an automated data pipeline to generate city profiles from 30+ up-to-date public and private data sources.
-
-With a Machine Learning Nanodegree from Udacity, I am a data scientist by training. I am proficient in multiple programming languages, including using SQL to query Google Patents Public Data, and Python to build machine learning models in previous research projects. I served as the co-chair of the Brookings Data Network, and I am recognized as the go-to person for data solutions and coding questions on my team. My contributions include an internal R package with datasets and functions to streamline data fetching, cleaning, and wrangling workflow, and a market assessment dashboard built with R Markdown and R Shiny with 60+ indicators on regional demographic, economic and labor market trends.
-
-I am currently based in Shanghai, and willing to relocate to Beijing. I hope to have the opportunity to speak further about how I can contribute to the WRI Beijing team.
-
-Sincerely,
-
-Sifan Liu
