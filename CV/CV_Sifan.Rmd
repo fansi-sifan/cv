@@ -8,7 +8,7 @@ email: "sifan1121@gmail.com"
 twitter: Sifan_Liu
 github: fansi-sifan
 date: "`r format(Sys.time(), '%B %Y')`"
-aboutme: Senior research analyst with strong quantatitive and qualitative research skills in a leading think tank in the U.S., with experiences on climate finance, innovative financial instruments, and sustainable cities.
+aboutme: Senior research analyst at a top U.S. think tank, with five years' research and public sector consulting experience in regional economic development, industrial economics, and innovation policy. Currently based in China.
 
 
 output: vitae::awesomecv
@@ -17,7 +17,7 @@ docname: résumé
 #中文 zh, 英文 en
 params:
   lang: en
-  col: wri
+  col: bcg
   # col:tech
 ---
 

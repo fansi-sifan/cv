@@ -1,0 +1,166 @@
+---
+# name: Sifan Liu
+# surname: Data Analyst
+# # phone: +1 202 790 3421
+# phone: +86 180 0169 8145
+# www: sifanliu.com
+# email: "sifan1121@gmail.com"
+# twitter: Sifan_Liu
+# github: fansi-sifan
+# date: "`r format(Sys.time(), '%B %Y')`"
+# aboutme: Five years' urban economics research experience in a leading think tank in the U.S., with 30+ publications on labor markets, inclusive economic development, and regional economic dynamisms
+
+# name: Yuqi Liao
+# surname: Project Administrator
+# www: yuqiliao.com
+# email: "yuqi@data-whale.com"
+# twitter: yuqiliao
+# github: yuqiliao
+# aboutme: Data and research professional with more than 5 years' experience with an interdisciplinary background in data visualization, web development, large-scale survey and assessment, machine learning, econometrics, and public policy. Passionate about helping people and organizations explore and understand their data.
+
+name: Xinyu Weng
+surname:  Data Analyst
+email: aline@data-whale.com
+aboutme: More than five years' research and analytical experience in leading international financial institutions, with expertise in international development, agricultural and resource economics.
+
+# name: Ruobing Wang
+# surname: Project Manager
+# www: robinwang.net
+# email: "robin@data-whale.com"
+# twitter: Ruobing_Wang
+# aboutme: Policy and data consulting experience in think tank, private / public sector, including health sector, impact financing, and industrial development.
+
+output: vitae::awesomecv
+headcolor: 58cccc
+# docname: résumé
+docname: CV
+profilepic: "green_whale_square.png"
+#中文 zh, 英文 en
+params:
+  lang: en
+  col: DW
+  # col:tech
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(vitae)
+library(magrittr) # For the pipe
+library(rmarkdown)
+
+yuqi <- "https://docs.google.com/spreadsheets/d/1OVMx7yIrwaUcw555W2EieZB1NBykykFqRBpKDJ-ds04/edit#gid=917338460"
+aline <- "https://docs.google.com/spreadsheets/d/17tX9UCpDjU4Fb5jVqW2Qq7peQYPlDiqm2hZRTixUJeA/edit#gid=917338460"
+sifan <- "https://docs.google.com/spreadsheets/d/1fGzz1JVVBYOuMDYDCg_PBn9hDf9-eU2EV-zzFZSsmtE/edit#gid=917338460"
+robin <- "https://docs.google.com/spreadsheets/d/1FYECuQZuM5EKSocOgl1R6MzXhY61Oip-0ecq8Troh8k/edit#gid=917338460"
+
+data_location = dplyr::case_when(
+  metadata$name == "Yuqi Liao" ~ yuqi,
+  metadata$name == "Sifan Liu" ~ sifan,
+  metadata$name == "Ruobing Wang" ~ robin,
+  metadata$name == "Xinyu Weng" ~ aline
+)
+
+googlesheets4::gs4_deauth()
+
+get_data <- function(in_resume){
+  in_resume <- sym(in_resume)
+  
+  googlesheets4::read_sheet(data_location, sheet = "entries", skip = 1, col_types = "c") %>% 
+  # mutate(in_resume = as.logical(in_resume)) %>% 
+  filter(!!in_resume!= "0") %>% 
+  arrange(!!in_resume)
+}
+
+cv_data <- get_data(params$col)
+```
+ 
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Experience", "工作经历"), "\n")
+```
+
+```{r}
+cv_data %>% 
+  filter(language == params$lang) %>%
+  filter(section == "positions") %>% 
+  arrange(desc(end)) %>% 
+  mutate(dates = paste0(start," - ", end)) %>% 
+  detailed_entries(title, dates, institution, loc, description) 
+```
+
+
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Education", "教育背景"), "\n")
+```
+
+```{r}
+cv_data %>% 
+  filter(language == params$lang) %>%
+  filter(section == "education") %>% 
+  mutate(dates = paste0(start," - ", end)) %>% 
+  detailed_entries(title, dates, institution, loc, description)
+```
+
+
+```{r, results='asis'}
+# cat("#",ifelse(params$lang == "en", "Selected Publications and Presentations", "学术成果"), "\n")
+cat("#",ifelse(params$lang == "en", "Selected Publications", "学术成果"), "\n")
+```
+
+```{r}
+# library(dplyr)
+# tmp <- scholar::get_publications("SOfZqRsAAAAJ&") %>%
+#   filter(grepl("economic|digitalization", title, ignore.case = T)) %>%
+#   filter(!grepl("evidence", title, ignore.case = T)) %>% 
+#   distinct(title, .keep_all = TRUE) %>%
+#   transmute(bibtype = "Article", 
+#             author = stringr::str_to_title(as.character(author)),
+#             title = stringr::str_to_title(as.character(title)),
+#             journaltitle = "Brookings Institution", year, key = row_number())
+# 
+# RefManageR::WriteBib(RefManageR::as.BibEntry(tmp), "Sliu.bib")
+
+# bibliography_entries("Sliu.bib") 
+
+pub <- cv_data %>%
+  filter(grepl(params$lang, language)) %>%
+  # filter(language == params$lang) %>% 
+  filter(section %in% c("publications", "presentations")) %>%
+  arrange(desc(start)) %>% 
+  # mutate(dates = paste0(start," - ", end)) %>%
+  brief_entries(what = description, when = start) 
+
+pub
+# pub[1:12,]
+# pub[12:nrow(pub),]
+
+
+```
+
+
+<!-- ```{r, results='asis'} -->
+<!-- cat("#",ifelse(params$lang == "en", "Selected Teachings", "教学"), "\n") -->
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+<!-- cv_data %>% -->
+<!--   filter(grepl(params$lang, language)) %>% -->
+<!--   filter(section %in% c("teachings")) %>% -->
+<!--   arrange(desc(start)) %>% -->
+<!--   # mutate(dates = paste0(start," - ", end)) %>% -->
+<!--   brief_entries(what = description, when = start) -->
+<!-- ``` -->
+
+
+```{r, results='asis'}
+cat("#",ifelse(params$lang == "en", "Skills", "专业技能"), "\n")
+```
+
+```{r}
+cv_data %>% 
+  filter(language == params$lang) %>%
+  filter(section == "skills") %>%
+  # mutate(dates = paste0(start," - ", end)) %>%
+  brief_entries(what = description, when = start)
+```
+
