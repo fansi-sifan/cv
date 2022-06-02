@@ -1,25 +1,37 @@
 ---
-name: 刘思凡
-surname: Sifan Liu
-# phone: +1 202 790 3421
-phone: +86 180 0169 8145
+# name: 刘思凡
+# surname: Sifan Liu
+name: Sifan
+surname: Liu
+phone: +1 202 790 3421
+# phone: +86 180 0169 8145
 www: sifanliu.com
 email: "sifan1121@gmail.com"
+# address: Shanghai, China
 twitter: Sifan_Liu
 github: fansi-sifan
 date: "`r format(Sys.time(), '%B %Y')`"
-aboutme: Senior research analyst at a top U.S. think tank, with five years' research and public sector consulting experience in regional economic development, industrial economics, and innovation policy. Currently based in China.
-
-
+aboutme: Data scientist with six years’ experience delivering data and analytics products at leading venture capital firms, and research organizations. Skilled at building machine learning models, data analysis pipelines, and interactive dashboards in R and Python.
+# aboutme: Senior research analyst with strong quantitative and qualitative research skills in a leading think tank in the U.S., with 30+ publications including a research report recreating AI Index for major U.S. metropolitan areas based on the Stanford HAI report.
+# aboutme: Research manager with five years' experience delivering analytical products and managing research projects at leading think tanks and international organizations. Skilled at applying data science to public policy, economic development, and international development. 
 output: vitae::awesomecv
 headcolor: 333333
 docname: résumé
 #中文 zh, 英文 en
 params:
   lang: en
-  col: bcg
-  # col:tech
+  col: NA
 ---
+
+```{r, include= FALSE}
+# modify lineskip
+# 1. change from -0.2 to 3 in : 
+# \newcommand{\acvSectionTopSkip}{-0.2mm}; \newcommand{\acvSectionContentTopSkip}{-0.2mm}
+
+# 2. to increase\vspace{-2mm} @ cvinformation last line
+
+```
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
@@ -70,8 +82,8 @@ cv_data %>%
 
 
 ```{r, results='asis'}
-cat("#",ifelse(params$lang == "en", "Selected Publications", "学术成果"), "\n")
-# cat("#",ifelse(params$lang == "en", "Selected Publications", "学术成果"), "\n")
+cat("#",ifelse(params$lang == "en", "Publications", "学术成果"), "\n")
+
 ```
 
 ```{r}
